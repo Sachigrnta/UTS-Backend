@@ -22,7 +22,7 @@ async function getUsers(request, response, next) {
       const count = users.length;
       const results = {};
 
-      // untuk menginfokan besar halaman dan banyaknya user yang berada pada halaman sebelum/ selanjutnya
+      /*untuk menginfokan besar halaman dan banyaknya user yang berada pada halaman sebelum/ selanjutnya
       if (endIndex < users.length) {
         results.nextPages = {
           page: page + 1,
@@ -36,6 +36,7 @@ async function getUsers(request, response, next) {
           limit: limit,
         };
       }
+      */
 
       results.results = users.slice(startIndex, endIndex);
 
