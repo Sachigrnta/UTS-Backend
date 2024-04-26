@@ -11,7 +11,50 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 async function getUsers(request, response, next) {
   try {
     const users = await usersService.getUsers();
-    return response.status(200).json(users);
+    const page = parseInt(request.query.page);
+    const limit = parseInt(request.query.limit);
+
+    //mengecek apakah page dan limit memiliki nilai.
+    if (page && limit) {
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const totalPages = Math.ceil(users.length / limit);
+      const count = users.length;
+      const results = {};
+
+      // untuk menginfokan besar halaman dan banyaknya user yang berada pada halaman sebelum/ selanjutnya
+      if (endIndex < users.length) {
+        results.nextPages = {
+          page: page + 1,
+          limit: limit,
+        };
+      }
+
+      if (startIndex > 0) {
+        results.previousPages = {
+          page: page - 1,
+          limit: limit,
+        };
+      }
+
+      results.results = users.slice(startIndex, endIndex);
+
+      //mengubah nama penyebutan data agar mudah dipahami
+      const outputData = {
+        page_number: page,
+        page_size: limit,
+        count: count,
+        total_pages: totalPages,
+        has_previous_page: page > 1,
+        has_next_page: page < totalPages,
+        data: results,
+      };
+      return response.json(outputData);
+
+      //mengembalikan seluruh data users apabila tidak terdapat parameter pagination.
+    } else {
+      return response.json(users);
+    }
   } catch (error) {
     return next(error);
   }
