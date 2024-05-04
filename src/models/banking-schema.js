@@ -22,7 +22,7 @@ const bankingSchema = new mongoose.Schema({
     required: true,
   },
   pin: {
-    type: String,
+    type: Number,
     required: true,
   },
 });
