@@ -1,6 +1,7 @@
 const { number, string, required } = require('joi');
+const mongoose = require('mongoose');
 
-const bankingSchema = {
+const bankingSchema = new mongoose.Schema({
   usersAccountId: {
     type: String,
     required: true,
@@ -24,6 +25,6 @@ const bankingSchema = {
     type: String,
     required: true,
   },
-};
+});
 
-module.exports = bankingSchema;
+module.exports = mongoose.model('banking', bankingSchema);
