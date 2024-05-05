@@ -30,7 +30,7 @@ async function getTransaction(id) {
 
 async function updateTransaction(id, newData) {
   try {
-    await transactionRepository.updateTransaction(id, newData);
+    await transactionRepository.updateTransaction(id, newId);
   } catch (error) {
     return null;
   }
