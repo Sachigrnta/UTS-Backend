@@ -13,34 +13,52 @@ async function getUsers(request, response, next) {
     const users = await usersService.getUsers();
     const page = parseInt(request.query.page);
     const limit = parseInt(request.query.limit);
+    const searchUsers = request.query.search;
+    const searchFilter = searchUsers ? searchUsers.split(':')[1] : null; // periksa nilai search user
+    const sortUsers = request.query.sort;
 
-    //mengecek apakah page dan limit memiliki nilai.
+    let usersFilter = users;
+
+    if (searchFilter) {
+      const filter = new RegExp(searchFilter, 'i');
+      usersFilter = users.filter(
+        (user) => filter.test(user.name) || filter.test(user.email)
+      );
+      console.log('Filtered users:', usersFilter);
+    }
+
+    // mengaplikasikan sort untuk mengurutkan users yang ditampilkan
+    if (sortUsers) {
+      const [sortBy, sortOrder] = sortUsers.split(':');
+      usersFilter.sort((a, b) => {
+        const A = a[sortBy];
+        const B = b[sortBy];
+
+        if (sortOrder === 'asc') {
+          //sort dari kecil - besar
+          if (A < B) return -1;
+          if (A > B) return 1;
+          return 0;
+        } else if (sortOrder === 'desc') {
+          //sort dari besar - kecil
+          if (A < B) return 1;
+          if (A > B) return -1;
+          return 0;
+        }
+      });
+    }
+
+    // Mengecek apakah page dan limit memiliki nilai.
     if (page && limit) {
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
-      const totalPages = Math.ceil(users.length / limit);
-      const count = users.length;
+      const totalPages = Math.ceil(usersFilter.length / limit);
+      const count = usersFilter.length;
       const results = {};
 
-      /*untuk menginfokan besar halaman dan banyaknya user yang berada pada halaman sebelum/ selanjutnya
-      if (endIndex < users.length) {
-        results.nextPages = {
-          page: page + 1,
-          limit: limit,
-        };
-      }
+      results.results = usersFilter.slice(startIndex, endIndex);
 
-      if (startIndex > 0) {
-        results.previousPages = {
-          page: page - 1,
-          limit: limit,
-        };
-      }
-      */
-
-      results.results = users.slice(startIndex, endIndex);
-
-      //mengubah nama penyebutan data agar mudah dipahami
+      // Mengubah nama penyebutan data agar mudah dipahami
       const outputData = {
         page_number: page,
         page_size: limit,
@@ -51,10 +69,8 @@ async function getUsers(request, response, next) {
         data: results,
       };
       return response.json(outputData);
-
-      //mengembalikan seluruh data users apabila tidak terdapat parameter pagination.
     } else {
-      return response.json(users);
+      return response.json(usersFilter);
     }
   } catch (error) {
     return next(error);
