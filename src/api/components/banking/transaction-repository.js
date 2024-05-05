@@ -27,7 +27,7 @@ async function getTransaction(id) {
  * @returns {Promise}
  */
 async function createTransaction(
-  usersAccountIdAccountId,
+  usersAccountId,
   receiverAccountId,
   amount,
   transactionSchedule,
