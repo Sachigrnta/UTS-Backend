@@ -19,12 +19,13 @@ async function createTransaction(request, response, next) {
       pin
     );
 
-    if (!success) {
+    if (success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
         'Failed to create users'
       );
     }
+
     return response.status(200).json({
       usersAccountId,
       name,

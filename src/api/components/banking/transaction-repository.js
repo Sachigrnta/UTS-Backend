@@ -20,14 +20,16 @@ async function getTransaction(id) {
 /**
  * Create transaction
  * @param {string} usersAccountId
+ * @param {string} name
  * @param {string} receiverAccountId
  * @param {number} amount
  * @param {date} transactionSchedule
- * @param {number} pin
+ * @param {string} pin
  * @returns {Promise}
  */
 async function createTransaction(
   usersAccountId,
+  name,
   receiverAccountId,
   amount,
   transactionSchedule,
@@ -35,6 +37,7 @@ async function createTransaction(
 ) {
   return Transaction.create({
     usersAccountId,
+    name,
     receiverAccountId,
     amount,
     transactionSchedule,

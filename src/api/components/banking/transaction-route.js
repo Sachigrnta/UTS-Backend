@@ -13,7 +13,7 @@ module.exports = (app) => {
   // Create transaction
   route.post(
     '/',
-    authenticationMiddleware,
+    // authenticationMiddleware,
     celebrate(transactionValidator.createTransaction),
     transactionControllers.createTransaction
   );

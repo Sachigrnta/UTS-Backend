@@ -1,5 +1,6 @@
 const bankingSchema = {
   usersAccountId: String,
+  name: String,
   receiverAccountId: String,
   amount: Number,
   transactionSchedule: Date,

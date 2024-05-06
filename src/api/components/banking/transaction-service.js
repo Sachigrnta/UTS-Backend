@@ -2,6 +2,7 @@ const transactionRepository = require('./transaction-repository');
 
 async function createTransaction(
   usersAccountId,
+  name,
   receiverAccountId,
   amount,
   transactionSchedule,
@@ -10,6 +11,7 @@ async function createTransaction(
   try {
     await transactionRepository.createTransaction(
       usersAccountId,
+      name,
       receiverAccountId,
       amount,
       transactionSchedule,
