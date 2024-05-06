@@ -1,4 +1,5 @@
 const express = require('express');
+
 const transactionControllers = require('./transaction-controller');
 const transactionValidator = require('./transaction-validator');
 const authenticationMiddleware = require('../../middlewares/authentication-middleware');
@@ -13,7 +14,7 @@ module.exports = (app) => {
   route.post(
     '/',
     authenticationMiddleware,
-    celebrate(transactionValidator.createTransactionValidator),
+    celebrate(transactionValidator.createTransaction),
     transactionControllers.createTransaction
   );
 
@@ -28,7 +29,7 @@ module.exports = (app) => {
   route.put(
     '/:id',
     authenticationMiddleware,
-    celebrate(transactionValidator.updateTransactionValidator),
+    celebrate(transactionValidator.createTransaction),
     transactionControllers.updateTransaction
   );
 

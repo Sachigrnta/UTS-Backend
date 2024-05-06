@@ -1,4 +1,4 @@
-const transactionRepository = require('./transactionRepository');
+const transactionRepository = require('./transaction-repository');
 
 async function createTransaction(
   usersAccountId,

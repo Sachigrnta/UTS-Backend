@@ -5,19 +5,34 @@ async function createTransaction(request, response, next) {
   try {
     const usersAccountId = request.body.usersAccountId;
     const amount = request.body.amount;
+    const receiverAccountId = request.body.receiverAccountId;
     const transactionSchedule = request.body.transactionSchedule;
     const pin = request.body.pin;
-    const transaction = await transactionService.createTransaction(
+    const name = request.body.name;
+
+    const success = await transactionService.createTransaction(
       usersAccountId,
+      name,
+      receiverAccountId,
       amount,
       transactionSchedule,
       pin
     );
 
-    if (!pin) {
-      throw errorResponder(errorTypes.INVALID_PASSWORD, 'Wrong password input');
+    if (!success) {
+      throw errorResponder(
+        errorTypes.UNPROCESSABLE_ENTITY,
+        'Failed to create users'
+      );
     }
-    return response.status(200).json(transaction);
+    return response.status(200).json({
+      usersAccountId,
+      name,
+      receiverAccountId,
+      amount,
+      transactionSchedule,
+      pin,
+    });
   } catch (error) {
     return next(error);
   }
@@ -63,6 +78,7 @@ async function updateTransaction(request, response, next) {
 async function deleteTransaction(request, response, next) {
   try {
     const id = request.body.id;
+
     const success = await transactionService.deleteTransaction(id);
     if (!success) {
       throw errorResponder(
